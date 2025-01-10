@@ -1,13 +1,19 @@
 package LiterAlura.principal;
 
+import LiterAlura.service.Clases.Libro;
+import LiterAlura.service.GutendexServices;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Principal{
     private Scanner teclado = new Scanner(System.in);
-    private String URL=" gutendex.com/books";
-
+    public String URL=" gutendex.com/books";
+public   List<Libro> biblioteca= new ArrayList<>();
 public void interfaz(){
     System.out.println(Principal.inicio());
+
     var opcion = -1;
     while (opcion != 0) {
         var menu = """
@@ -29,6 +35,7 @@ public void interfaz(){
 
         switch (opcion) {
             case 1:
+                filtrarxTitulo();
                 break;
             case 2:
                 break;
@@ -45,6 +52,14 @@ public void interfaz(){
                 System.out.println("Opción inválida");
         }
     }}
+    //Metodos
+public  void   filtrarxTitulo(){
+    System.out.println("Ingrese el titulo del libro:");
+    var aux= teclado.nextLine();
+    String direccion=URL+"?search="+teclado;
+    GutendexServices servicio=new GutendexServices();
+biblioteca.add( servicio.filtrarxTitulo(direccion));
+}
 
 
 
