@@ -15,5 +15,5 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Principal aux=new Principal();
-	aux.muestraElMenu();
-}
+	aux.interfaz();
+}}
