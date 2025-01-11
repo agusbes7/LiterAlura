@@ -1,20 +1,29 @@
 package LiterAlura.service.Clases;
 
 import LiterAlura.service.Datos.DatosLibro;
+import jakarta.persistence.criteria.CriteriaBuilder;
+
+import java.util.Optional;
 
 public class Libro {
-   // Long id;
+    Integer id;
     String titulo;
-    Autor autoria;
+   Autor autoria;
     String idiomas;
-    Integer Descargas;
-
     public  Libro(DatosLibro libro){
         this.titulo=libro.titulo();
-        this.autoria=libro.autor();
-        this.idiomas=libro.idioma();}
-      //  this.id=libro.id();    }
+        this.autoria=new Autor(libro.autor()
+                .stream()
+                .findFirst()
+                .get());
+        this.id=libro.id();
+        this.Descargas= libro.descargas();
+        Optional<String> au=libro.idioma().stream().findFirst();
+        if(au.isPresent()){this.idiomas=au.get();}
+        this.idiomas="";
+    }
 
+    Integer Descargas;
     public String getTitulo() {
         return titulo;
     }
@@ -38,6 +47,14 @@ public class Libro {
         Descargas = descargas;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Autor getAutoria() {
+        return autoria;
+    }
+
     @Override
     public String toString() {
         return "Libro{" +
@@ -45,6 +62,7 @@ public class Libro {
                 autoria.toString() +
                 ", idiomas='" + idiomas + '\'' +
                 ", Descargas=" + Descargas +
+                "ID:"+ id+
                 '}';
     }
 }

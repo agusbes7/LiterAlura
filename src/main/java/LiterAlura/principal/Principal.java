@@ -1,21 +1,26 @@
 package LiterAlura.principal;
 
 import LiterAlura.service.Clases.Libro;
+import LiterAlura.service.Datos.DatosLibro;
 import LiterAlura.service.GutendexServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class Principal{
-    private Scanner teclado = new Scanner(System.in);
-    public String URL=" gutendex.com/books";
-public   List<Libro> biblioteca= new ArrayList<>();
-public void interfaz(){
-    System.out.println(Principal.inicio());
+public class Principal {
+      private Scanner teclado = new Scanner(System.in);
+      private   List<Libro> biblioteca= new ArrayList<>();
+    private final String URL = "https://gutendex.com/books/";
+   private  GutendexServices servicios=new GutendexServices();
 
+    public void interfaz() {
+//    System.out.println(Principal.inicio());
+
+    //----------------------
     var opcion = -1;
-    while (opcion != 0) {
+  while (opcion != 0) {
         var menu = """
                     -----Repositorio de libros-----
                     
@@ -38,12 +43,19 @@ public void interfaz(){
                 filtrarxTitulo();
                 break;
             case 2:
+                System.out.println("holda");
                 break;
             case 3:
+                System.out.println("hola");
+
                 break;
             case 4:
+                System.out.println("hotla");
+
                 break;
             case 5:
+                System.out.println("hfola");
+
                 break;
             case 0:
                 System.out.println(Principal.Salida());
@@ -52,13 +64,24 @@ public void interfaz(){
                 System.out.println("Opción inválida");
         }
     }}
+
     //Metodos
-public  void   filtrarxTitulo(){
+public  void   filtrarxTitulo() {
     System.out.println("Ingrese el titulo del libro:");
-    var aux= teclado.nextLine();
-    String direccion=URL+"?search="+teclado;
-    GutendexServices servicio=new GutendexServices();
-biblioteca.add( servicio.filtrarxTitulo(direccion));
+    var aux = teclado.nextLine();
+    String direccion = (URL + "?search=" + aux.replace(" ", "%20")).toLowerCase().trim();
+
+    Optional<DatosLibro> libro = servicios.filtrarxTitulo(direccion);
+      if (libro.isPresent()) {
+          Libro archivo = new Libro(libro.get());
+        //  biblioteca.add(archivo);
+       System.out.println(archivo);
+   } else {
+        System.out.println("""
+                Lo sentimos no se pudo encontrar el libro
+                 Asegurese de que este bien escrito
+                 Puede tener otros nombres a veces""");
+    }
 }
 
 

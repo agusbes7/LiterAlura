@@ -39,7 +39,7 @@ public class Autor {
     public String toString() {
         String basico="Autor{ " +
                  nombre + '\'' +
-                "Nacio el " + this.getFechaDeNacimiento();
+                "Nacio en " + this.getFechaDeNacimiento();
         String opcional ="Año de Defuncion: el " + FechaDeDefuncion + '\'' +
                 '}';
     //verificar si tiene año de defuncion y mostrarlo, pasa a datetime
