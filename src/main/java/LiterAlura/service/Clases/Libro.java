@@ -12,15 +12,10 @@ public class Libro {
     String idiomas;
     public  Libro(DatosLibro libro){
         this.titulo=libro.titulo();
-        this.autoria=new Autor(libro.autor()
-                .stream()
-                .findFirst()
-                .get());
+        this.autoria=new Autor(libro.autor());
         this.id=libro.id();
         this.Descargas= libro.descargas();
-        Optional<String> au=libro.idioma().stream().findFirst();
-        if(au.isPresent()){this.idiomas=au.get();}
-        this.idiomas="";
+        this.idiomas=libro.idioma();
     }
 
     Integer Descargas;

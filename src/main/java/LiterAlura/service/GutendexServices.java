@@ -18,73 +18,84 @@ import java.util.Optional;
 
 public class GutendexServices {
     private ConsumoAPI api = new ConsumoAPI();
-    private IConvierteDatos conversor = new ConvierteDatos();
+    private ConvierteDatos conversor = new ConvierteDatos();
     private ObjectMapper mapeo = new ObjectMapper();
+//.split(",")[0].trim-->para trabajar con arreglos de strings
 
-
-    public Optional<DatosLibro> filtrarxTitulo(String url) {
+/*    public Optional<DatosLibro> filtrarxTitulo(String url) {
         Optional<String> datos = api.obtenerDatos(url);
-        Optional<DatosAutor> autor;
-        Optional<String> idioma;
-            if (datos.isPresent()) {
-                try {
-                    JsonNode library = mapeo.readTree(datos.get());
-                    JsonNode nodo = library.get("results");
-//----------------Chequeo de Datos-------------------------------------------
-                    if (nodo == null || nodo.size() == 0) {
-                        return Optional.empty();
-                    } // Si no hay nada en "results"
-                   //-----------------Primer Libro de results------------------------------------------
-                    JsonNode primerResult = nodo.get(0);
-//----------------Chequeo de Datos-------------------------------------------
-                    if (primerResult == null || primerResult.size() == 0) {
-                        return Optional.empty();}                   // System.out.println("Resultado del nodo results:" + primerResult);
+        if (datos.isPresent()) {
+            try {
+                JsonNode data = mapeo.readTree(datos.get());
+                JsonNode resultado = data.get("results").get(0);
+                System.out.println(resultado);
+                if(resultado != null){
+//Dado que el record no posee listas y no deseo hacerlo asi trabajamos es parte aca
 
-DatosLibro contenedor = mapeo.convertValue(primerResult, DatosLibro.class); //System.out.println("Resultado del contenedor : " + contenedor);
+JsonNode resultadosAutores=resultado.get("authors").get(0);
+JsonNode resultadosIdioma=resultado.get("languages").get(0);
+                    System.out.println("resultAutores"+ resultadosAutores);
+                    System.out.println("resultIdioma"+ resultadosIdioma);
+                     if(resultadosAutores!= null && resultadosIdioma!=null){
+     DatosAutor aux=mapeo.treeToValue(resultadosAutores, DatosAutor.class);
 
-                    return Optional.of(contenedor);}
-                ////-----------------Primer Autor del libro------------------------------------------
-//autor = this.obtenerAutor(primerResult);
-//if (autor.isEmpty()) {return Optional.empty();} // No hay autor
-////-----------------Primer idioma de la lista------------------------------------------
-//JsonNode idiomas = primerResult.get("languages");
-// idioma = this.obteneridioma(idiomas);
-//if (idioma.isEmpty()) {return Optional.empty();} // No hay idioma
-////-----------------Objeto Datos libro------------------------------------------
-//
-//DatosLibro result = this.obtenerDatos(contenedor, autor.get(), idioma.get());
-//return Optional.of(result);}
-                catch (Exception e){
-                    System.err.println("Error en el proceso: " + e.getMessage());}
-            }
-            return Optional.empty();} // Si no se obtienen datos de la API
+       DatosLibro libro=new DatosLibro(resultado.get(0).asInt(), //id
+                            resultado.get(1).toString(), //title
+                            aux, //Datos autor
+                           resultado.get(10).asInt(), //elemento correspondiente a las descargas
+               resultadosIdioma.toString());
+                return  Optional.of(libro);}
+                }
+                return Optional.empty();
+
+                }catch (Exception e){
+                    System.out.println("lo siento fallo el proceso de extraccion de datos "+ e.getMessage());}
+           }
 
 
-    //-----------------------------------------------------------
-        /*private Optional<DatosAutor> obtenerAutor(JsonNode auxiliar) {
-            JsonNode authorsNode = auxiliar.get("authors");
-            if (authorsNode != null && authorsNode.size() > 0) {
-                DatosAutor primero = mapeo.convertValue(authorsNode.get(0), DatosAutor.class);
-                return Optional.of(primero);
-            }
             return Optional.empty();
-        }
+    }*/
+public Optional<DatosLibro> filtrarxTitulo(String url) {
+    Optional<String> datos = api.obtenerDatos(url);
 
+    if (datos.isPresent()) {
+        try {
+            // Leer el JSON completo
+            JsonNode data = mapeo.readTree(datos.get());
+            JsonNode resultado = data.get("results").get(0);
 
-        //-----------------------------------------------------------
-        private Optional<String> obteneridioma(JsonNode auxiliar) {
-            if (auxiliar != null && auxiliar.size() > 0) {
-                List<String> listaIdiomas = mapeo.convertValue(auxiliar, new TypeReference<List<String>>() {});
-                return listaIdiomas.stream().findFirst();
+            if (resultado != null) {
+                // Extraer información del autor (primer autor)
+                JsonNode autoresNode = resultado.get("authors");
+                DatosAutor autor = null;
+                if (autoresNode != null && autoresNode.isArray() && autoresNode.size() > 0) {
+                    JsonNode primerAutor = autoresNode.get(0);
+                    autor = mapeo.treeToValue(primerAutor, DatosAutor.class);
+                }
+
+                // Extraer información del idioma (primer idioma)
+                JsonNode idiomasNode = resultado.get("languages");
+                String idioma = null;
+                if (idiomasNode != null && idiomasNode.isArray() && idiomasNode.size() > 0) {
+                    idioma = idiomasNode.get(0).asText();
+                }
+
+                // Crear objeto DatosLibro
+                DatosLibro libro = new DatosLibro(
+                        resultado.get("id").asInt(),
+                        resultado.get("title").asText(),
+                        autor,
+                        resultado.get("download_count").asInt(),
+                        idioma
+                );
+
+                return Optional.of(libro);
             }
-            return Optional.empty();
+        } catch (Exception e) {
+            System.out.println("Error procesando el JSON: " + e.getMessage());
         }
+    }
+    return Optional.empty();
+}
 
-//-----------------------------------------------------------
-
-//    private DatosLibro obtenerDatos(DatosLibro aux, DatosAutor primero, String idioma) {
-//        return new DatosLibro(
-//                aux.id(),aux.titulo(),
-//                primero,aux.descargas(),
-//                idioma);}*/
 }
