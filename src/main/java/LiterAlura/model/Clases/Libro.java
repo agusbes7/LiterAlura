@@ -1,9 +1,6 @@
-package LiterAlura.service.Clases;
+package LiterAlura.model.Clases;
 
-import LiterAlura.service.Datos.DatosLibro;
-import jakarta.persistence.criteria.CriteriaBuilder;
-
-import java.util.Optional;
+import LiterAlura.model.Datos.DatosLibro;
 
 public class Libro {
     Integer id;
@@ -52,12 +49,18 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "Libro{" +
-                "titulo='" + titulo + '\'' +
-                autoria.toString() +
-                ", idiomas='" + idiomas + '\'' +
-                ", Descargas=" + Descargas +
-                "ID:"+ id+
-                '}';
-    }
+
+
+        return """
+                ╔==========================================╗
+                ..................Libro.....................
+                ╚==========================================╝
+                   Titulo:        """+ titulo +'\n'+
+               "   Autor:         " + autoria.getNombre()+'\n' +
+               "   Idioma:        " + idiomas + '\n' +
+               "   Descargas:     " + Descargas +'\n' +
+               """
+                ============================================
+                
+                """;}
 }

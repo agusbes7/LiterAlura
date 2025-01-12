@@ -1,6 +1,6 @@
-package LiterAlura.service.Clases;
+package LiterAlura.model.Clases;
 
-import LiterAlura.service.Datos.DatosAutor;
+import LiterAlura.model.Datos.DatosAutor;
 
 public class Autor {
     String nombre;
@@ -37,11 +37,13 @@ public class Autor {
 
     @Override
     public String toString() {
-        String basico="Autor{ " +
-                 nombre + '\'' +
-                "Nacio en " + this.getFechaDeNacimiento();
-        String opcional ="Año de Defuncion: el " + FechaDeDefuncion + '\'' +
-                '}';
+
+        String basico= """
+                 ..................Autor.....................
+                 Nombre:  """ + nombre+'\n'+
+                "Nacio en:  "+this.getFechaDeNacimiento()+'\n'+
+                "Murio en:  "+getFechaDeDefuncion()+'\n'+
+                "............................................";
     //verificar si tiene año de defuncion y mostrarlo, pasa a datetime
 //        if(){            return  basico + opcional;
         return  basico;}

@@ -2,18 +2,11 @@ package LiterAlura.service;
 
 import LiterAlura.service.API.ConsumoAPI;
 import LiterAlura.service.API.ConvierteDatos;
-import LiterAlura.service.API.IConvierteDatos;
-import LiterAlura.service.Clases.Autor;
-import LiterAlura.service.Datos.DatosAutor;
-import LiterAlura.service.Datos.DatosLibro;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import LiterAlura.model.Datos.DatosAutor;
+import LiterAlura.model.Datos.DatosLibro;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class GutendexServices {
@@ -71,14 +64,15 @@ public Optional<DatosLibro> filtrarxTitulo(String url) {
                 if (autoresNode != null && autoresNode.isArray() && autoresNode.size() > 0) {
                     JsonNode primerAutor = autoresNode.get(0);
                     autor = mapeo.treeToValue(primerAutor, DatosAutor.class);
-                }
+                }else {
+                    autor=new DatosAutor(-1,"s/n",-1);}
 
                 // Extraer información del idioma (primer idioma)
                 JsonNode idiomasNode = resultado.get("languages");
                 String idioma = null;
                 if (idiomasNode != null && idiomasNode.isArray() && idiomasNode.size() > 0) {
                     idioma = idiomasNode.get(0).asText();
-                }
+                }else {idioma="s/n";}
 
                 // Crear objeto DatosLibro
                 DatosLibro libro = new DatosLibro(
