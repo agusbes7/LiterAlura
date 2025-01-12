@@ -43,10 +43,10 @@ public class Principal {
                 filtrarxTitulo();
                 break;
             case 2:
-                System.out.println("holda");
+                obtenerListaConsultas();
                 break;
             case 3:
-                System.out.println("hola");
+                obtenerListaAutores();
 
                 break;
             case 4:
@@ -65,8 +65,10 @@ public class Principal {
         }
     }}
 
+
+
     //Metodos
-public  void   filtrarxTitulo() {
+private  void   filtrarxTitulo() {
     System.out.println("Ingrese el titulo del libro:");
     var aux = teclado.nextLine();
     String direccion = (URL + "?search=" + aux.replace(" ", "%20")).toLowerCase().trim();
@@ -74,7 +76,7 @@ public  void   filtrarxTitulo() {
     Optional<DatosLibro> libro = servicios.filtrarxTitulo(direccion);
       if (libro.isPresent()) {
           Libro archivo = new Libro(libro.get());
-        //  biblioteca.add(archivo);
+         biblioteca.add(archivo);
        System.out.println(archivo);
    } else {
         System.out.println("""
@@ -83,6 +85,13 @@ public  void   filtrarxTitulo() {
                  Puede tener otros nombres a veces""");
     }
 }
+    private void obtenerListaConsultas() {
+biblioteca.forEach(e -> System.out.println(e));
+    }
+    private void obtenerListaAutores() {
+biblioteca.forEach(e -> System.out.println(e.getAutoria()));
+    }
+
 
 
 
