@@ -65,7 +65,7 @@ public Optional<DatosLibro> filtrarxTitulo(String url) {
                     JsonNode primerAutor = autoresNode.get(0);
                     autor = mapeo.treeToValue(primerAutor, DatosAutor.class);
                 }else {
-                    autor=new DatosAutor(-1,"s/n",-1);}
+                    autor=new DatosAutor(null,"s/n",null);}
 
                 // Extraer información del idioma (primer idioma)
                 JsonNode idiomasNode = resultado.get("languages");

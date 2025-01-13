@@ -1,4 +1,4 @@
-package LiterAlura;
+/*package LiterAlura;
 
 import LiterAlura.principal.Principal;
 import org.springframework.boot.CommandLineRunner;
@@ -16,4 +16,4 @@ public class Application implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Principal aux=new Principal();
 	aux.interfaz();
-}}
+}}*/

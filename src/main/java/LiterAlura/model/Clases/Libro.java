@@ -1,5 +1,6 @@
 package LiterAlura.model.Clases;
 
+import LiterAlura.model.Datos.DatosAutor;
 import LiterAlura.model.Datos.DatosLibro;
 import LiterAlura.model.Idioma;
 import jakarta.persistence.*;
@@ -12,8 +13,8 @@ public class Libro {
     private Long id;
     @Column(unique = true)
     String titulo;
-    @ManyToOne()
-    @JoinColumn(name = "autor_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "autor_id")
    Autor autoria;
     @Enumerated(EnumType.STRING)
     Idioma lenguaje;
@@ -23,10 +24,10 @@ public class Libro {
 //---------------------------------------------
     public  Libro(DatosLibro libro){
         this.titulo=libro.titulo();
-        this.autoria=new Autor(libro.autor());
        // this.id=libro.id();
         this.Descargas= libro.descargas();
-        this.lenguaje=Idioma.fromString(libro.idioma());}
+        this.lenguaje=Idioma.fromString(libro.idioma());
+  }
 
     public String getTitulo() {return titulo;}
     public Idioma getLenguaje() {return lenguaje;}
@@ -39,6 +40,10 @@ public class Libro {
     public void setTitulo(String titulo) {this.titulo = titulo;    }
     public void setLenguaje(Idioma lenguaje) {this.lenguaje = lenguaje;}
     public void setDescargas(Integer descargas) {Descargas = descargas;}
+
+    public void setAutoria(Autor aux) {
+        this.autoria = aux;
+    }
 
     @Override
     public String toString() {

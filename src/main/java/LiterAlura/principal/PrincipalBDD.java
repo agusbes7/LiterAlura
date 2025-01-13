@@ -1,9 +1,14 @@
 package LiterAlura.principal;
 
+import LiterAlura.model.Clases.Autor;
 import LiterAlura.model.Clases.Libro;
 import LiterAlura.model.Datos.DatosLibro;
 import LiterAlura.model.Idioma;
+import LiterAlura.repository.AutorRepository;
+import LiterAlura.repository.LibroRepository;
 import LiterAlura.service.GutendexServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,12 +16,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-
+@Component
 public class PrincipalBDD {
       private Scanner teclado = new Scanner(System.in);
       private   List<Libro> biblioteca= new ArrayList<>();
+      private  List<Autor> escritores=new ArrayList<>();
     private final String URL = "https://gutendex.com/books/";
    private  GutendexServices servicios=new GutendexServices();
+    private final LibroRepository libroRepository;
+    private final AutorRepository autorRepository;
+
+
+    @Autowired
+    public PrincipalBDD(LibroRepository libroRepository, AutorRepository autorRepository) {
+        this.libroRepository = libroRepository;
+        this.autorRepository = autorRepository;}
 
     public void interfaz() {
    System.out.println(PrincipalBDD.inicio());
@@ -77,6 +91,81 @@ public class PrincipalBDD {
         }
     }}
 
+      //......................................................
+
+    //Metodos
+private  void   filtrarxTitulo() {
+    System.out.print("Ingrese el titulo del libro:");
+    var title = teclado.nextLine();
+    String direccion = (URL + "?search=" + title.replace(" ", "%20")).toLowerCase().trim();
+    Optional<DatosLibro> archivo = servicios.filtrarxTitulo(direccion);
+
+    //buscar si existe el libro en gutendex
+    if(archivo.isPresent()){
+//--------------------------------------------------
+            DatosLibro aux=archivo.get();
+            //buscar si ya fue agregado a la base de datos
+            if (libroRepository.findBytitulo(aux.titulo()).isPresent()) {
+            System.out.println("El libro ya existe: " + aux.titulo());
+            return;}
+//------Buscar si el autor ya existe en la base--------------------------------------------
+    Optional<Autor> autor = autorRepository.findByNombre(aux.autor().nombre());
+//---------------------Si no existe creamos el autor y lo seteamos en libros y lo guardamos en autorRepository----------
+        Libro libro = new Libro(aux);
+            if(autor.isEmpty()) {
+            Autor nuevo = new Autor(aux.autor());
+            libro.setAutoria(nuevo);
+            autorRepository.save(nuevo); //guardamos el nuevo autor
+        }        else{
+                libro.setAutoria(autor.get());}
+         libroRepository.save(libro);
+//----------------Si existe seteamos el mismo autor en el nuevo libro y guardamos-------------------------------------------------------
+    System.out.println("Libro agregado exitosamente: " + libro);
+return;    }
+        System.out.println("""
+               ╔===============================================╗
+               ║¡¡ Lo sentimos no se pudo encontrar el libro!! ║
+               ║  Asegurese de que este bien escrito...        ║
+               ║  Puede tener otros nombres a veces !!!        ║
+               ╚===============================================╝\n""");
+    }
+    //......................................................
+
+    private void obtenerListaConsultas() {
+     biblioteca=libroRepository.findAll();
+biblioteca.forEach(e -> System.out.println(e));}
+    //......................................................
+
+    private void obtenerListaAutores() {
+        String aux= """
+               ╔===============================================╗
+               ║.....................Autores...................║
+               ╚===============================================╝
+                """;
+        System.out.println(aux);
+escritores=autorRepository.findAll();
+        escritores.forEach(e -> System.out.println(e.getNombre()));}
+    //......................................................
+    private void obtenerListaAutoresPorFecha() {
+        System.out.print("Ingrese la fecha en la que desea buscar (año): ");
+        Integer aux = teclado.nextInt();
+        if (aux > 0 && aux <= LocalDate.now().getYear()) {
+            String txt = """
+                    ╔===============================================╗
+                    ║................Autores vivos..................║
+                    ╚===============================================╝""";
+
+            System.out.println(txt);
+            Optional<List<Autor>> autores= autorRepository.findByFechaDeNacimientoLessThanAndFechaDeDefuncionIsnullorFechaDeDefuncionGreatherThan(aux);
+            if (autores.isPresent()){
+                autores.get().forEach(e -> System.out.println(e.getNombre()));}
+            else {
+                System.out.println("No se encontraron autores vivos en esa fecha");}
+        }         else {
+            System.out.println("Ingrese una fecha que sea valida");}
+        return;   }
+    //......................................................
+
     private void obtenerLibrosxIdioma() {
         System.out.print("""
                ╔===============================================╗
@@ -96,77 +185,15 @@ public class PrincipalBDD {
         String aux=teclado.nextLine();
 
         if (Idioma.validacion(aux)){
-List<Libro> filtro=  biblioteca.stream()
-                    .filter(e ->e.getLenguaje().equals(Idioma.fromString(aux)))
-                    .collect(Collectors.toList());
-        filtro.forEach(e -> System.out.println(e));}else {
-        System.out.println("Ingrese una opcion valida");}
-      }
+Optional<List<Libro>> cuaderno=libroRepository.findBylenguaje(Idioma.fromString(aux));
+if (cuaderno.isPresent()){
+    cuaderno.get().forEach(e -> System.out.println(e.getTitulo()));}
+else {
+    System.out.println("No hay ningun libro en dicho idioma");}
 
-
-    //Metodos
-private  void   filtrarxTitulo() {
-    System.out.print("Ingrese el titulo del libro:");
-    var aux = teclado.nextLine();
-    String direccion = (URL + "?search=" + aux.replace(" ", "%20")).toLowerCase().trim();
-    Optional<DatosLibro> libro = servicios.filtrarxTitulo(direccion);
-      if (libro.isPresent()) {
-          Libro archivo = new Libro(libro.get());
-          String title= archivo.getTitulo();
-        Optional<Libro> existe=biblioteca.stream()
-                  .filter(e -> e.getTitulo().contains(title))
-                .findFirst();
-              if(existe.isPresent()) {
-                  System.out.println("Este libro ya existe en su biblioteca");
-          return;}
-          else{
-         biblioteca.add(archivo);
-       System.out.println(archivo);}
-   } else {
-        System.out.println("""
-               ╔===============================================╗
-               ║¡¡ Lo sentimos no se pudo encontrar el libro!! ║
-               ║  Asegurese de que este bien escrito...        ║
-               ║  Puede tener otros nombres a veces !!!        ║
-               ╚===============================================╝\n""");
+        }else {
+            System.out.println("Ingrese una opcion valida");}
     }
-}
-    private void obtenerListaConsultas() {
-biblioteca.forEach(e -> System.out.println(e));
-    }
-    private void obtenerListaAutores() {
-        String aux= """
-               ╔===============================================╗
-               ║.....................Autores...................║
-               ╚===============================================╝
-                """;
-        System.out.println(aux);
-biblioteca.forEach(e -> System.out.println("Nombre:   "+e.getAutoria().getNombre() + "  Titulo:  "+ e.getTitulo()));
-    }
-    private void obtenerListaAutoresPorFecha() {
-        System.out.print("Ingrese la fecha en la que desea buscar (año): ");
-        Integer aux = teclado.nextInt();
-        if (aux > 0 && aux <= LocalDate.now().getYear()) {
-            List<Libro> existen = biblioteca.stream()
-                    .filter(e -> e.getAutoria().getFechaDeNacimiento() <= aux && e.getAutoria().getFechaDeDefuncion()>=aux)
-                    .collect(Collectors.toList());
-            if (existen.isEmpty()) {
-                System.out.println("No se encuentran Autores vivos en dicha fecha");
-                return;
-            }
-            String txt = """
-                    ╔===============================================╗
-                    ║................Autores vivos..................║
-                    ╚===============================================╝""";
-
-            System.out.println(txt);
-            existen.forEach(e -> System.out.println(e.getAutoria().getNombre()));
-        } else {
-            System.out.println("Ingrese una fecha que sea valida");
-        }
-
-    }
-
 
 
 //-------------Extras visuales------------------------------------------------
