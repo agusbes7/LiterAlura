@@ -2,12 +2,22 @@ package LiterAlura.model.Clases;
 
 import LiterAlura.model.Datos.DatosLibro;
 import LiterAlura.model.Idioma;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "libros")
 public class Libro {
-    //Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true)
     String titulo;
+    @ManyToOne()
+    @JoinColumn(name = "autor_id", nullable = false)
    Autor autoria;
+    @Enumerated(EnumType.STRING)
     Idioma lenguaje;
+
     Integer Descargas;
 
 //---------------------------------------------
@@ -22,6 +32,9 @@ public class Libro {
     public Idioma getLenguaje() {return lenguaje;}
     public Integer getDescargas() {        return Descargas;}
     public Autor getAutoria() {return autoria;}
+
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 
     public void setTitulo(String titulo) {this.titulo = titulo;    }
     public void setLenguaje(Idioma lenguaje) {this.lenguaje = lenguaje;}

@@ -1,8 +1,15 @@
 package LiterAlura.model.Clases;
 
 import LiterAlura.model.Datos.DatosAutor;
+import jakarta.persistence.*;
 
+@Entity
+@Table( name = "Autores")
 public class Autor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true)
+    private Long id;
     String nombre;
     Integer FechaDeNacimiento, FechaDeDefuncion;
 
@@ -23,16 +30,16 @@ public class Autor {
         return FechaDeNacimiento;
     }
 
-    public void setFechaDeNacimiento(String FechaDeNacimiento) {
-        FechaDeNacimiento = FechaDeNacimiento;
+    public void setFechaDeNacimiento(Integer FechaDeNacimiento) {
+       this.FechaDeNacimiento = FechaDeNacimiento;
     }
 
     public Integer getFechaDeDefuncion() {
         return FechaDeDefuncion;
     }
 
-    public void setFechaDeDefuncion(String FechaDeDefuncion) {
-        FechaDeDefuncion = FechaDeDefuncion;
+    public void setFechaDeDefuncion(Integer FechaDeDefuncion) {
+      this.FechaDeDefuncion = FechaDeDefuncion;
     }
 
     @Override
@@ -41,8 +48,8 @@ public class Autor {
         String basico= """
                  ..................Autor.....................
                  Nombre:  """ + nombre+'\n'+
-                "Nacio en:  "+this.getFechaDeNacimiento()+'\n'+
-                "Murio en:  "+getFechaDeDefuncion()+'\n'+
+                "Nacio en:  "+FechaDeNacimiento+'\n'+
+                "Murio en:  "+FechaDeDefuncion+'\n'+
                 "............................................";
     //verificar si tiene año de defuncion y mostrarlo, pasa a datetime
 //        if(){            return  basico + opcional;

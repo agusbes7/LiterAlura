@@ -41,13 +41,13 @@ Les comparto el desafio propuesto por alura [Trello](https://trello.com/b/WDyMPD
 📚
 ---
 ## 🗃️--Documentacion--🗃️
-Aunque ya fui dejando enlaces a lo largo de la descripcion les  proporciono otros usados
 
 🔸 [Documentacion de java](https://docs.oracle.com/en/java/javase/17/docs/api/index.html) Documentacion de todas las clases y metodos junto con sus implementaciones   
 🔸[Atajos Intellij](https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf) Atajos de teclado para explotar el potencial del entorno  
 🔸[Descripcion de clases de java](https://www.aluracursos.com/blog/estructura-datos-con-java) un resumen de las collecciones y otras estructuras que te pueden ser util  
 🔸[Clase HTTP Client](https://docs.oracle.com/en/java/javase/17/docs/api/java.net.http/java/net/http/HttpClient.html) Les dejo a mano la clase que les permite construir su request
 
+[Generador de textos Ascii](https://fsymbols.com/es/generadores/) Para mejorar la experiencia visual un poco en esta interfaz tan poco atractica
 ---
 ## 📲📲--CASOS DE PRUEBA--📲📲️
 
