@@ -76,7 +76,6 @@ public Optional<DatosLibro> filtrarxTitulo(String url) {
 
                 // Crear objeto DatosLibro
                 DatosLibro libro = new DatosLibro(
-                        resultado.get("id").asInt(),
                         resultado.get("title").asText(),
                         autor,
                         resultado.get("download_count").asInt(),

@@ -1,7 +1,9 @@
 package LiterAlura.principal;
 
+import LiterAlura.model.Clases.Autor;
 import LiterAlura.model.Clases.Libro;
 import LiterAlura.model.Datos.DatosLibro;
+import LiterAlura.model.Idioma;
 import LiterAlura.service.GutendexServices;
 
 import java.time.LocalDate;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
       private Scanner teclado = new Scanner(System.in);
@@ -44,6 +47,7 @@ public class Principal {
                     \n
                     """;
         System.out.println(menu);
+      System.out.print("Opcion:");
         opcion = teclado.nextInt();
         teclado.nextLine();
 
@@ -59,11 +63,11 @@ public class Principal {
 
                 break;
             case 4:
-                System.out.println("hotla");
+                obtenerListaAutoresPorFecha();
 
                 break;
             case 5:
-                System.out.println("hfola");
+               obtenerLibrosxIdioma();
 
                 break;
             case 0:
@@ -74,6 +78,31 @@ public class Principal {
         }
     }}
 
+    private void obtenerLibrosxIdioma() {
+        System.out.print("""
+               ╔===============================================╗
+               ║              Idiomas disponible               ║
+               ║...............................................║   
+               ║   Es-Español                                  ║
+               ║   En-Ingles                                   ║
+               ║   zh-Chino                                    ║
+               ║   fr-Frances                                  ║
+               ║   pt-Portugal                                 ║
+               ║   de-Aleman                                   ║
+               ║   fi-Finlandia                                ║
+               ║   s/n- no tiene ningun idioma registrado      ║
+               ╚===============================================╝
+               Selecciona uno de los idiomas escribiendo el codigo de idioma
+               Opcion: """);
+        String aux=teclado.nextLine();
+
+        if (Idioma.validacion(aux)){
+List<Libro> filtro=  biblioteca.stream()
+                    .filter(e ->e.getLenguaje().equals(Idioma.fromString(aux)))
+                    .collect(Collectors.toList());
+        filtro.forEach(e -> System.out.println(e));}else {
+        System.out.println("Ingrese una opcion valida");}
+      }
 
 
     //Metodos
@@ -81,12 +110,19 @@ private  void   filtrarxTitulo() {
     System.out.print("Ingrese el titulo del libro:");
     var aux = teclado.nextLine();
     String direccion = (URL + "?search=" + aux.replace(" ", "%20")).toLowerCase().trim();
-
     Optional<DatosLibro> libro = servicios.filtrarxTitulo(direccion);
       if (libro.isPresent()) {
           Libro archivo = new Libro(libro.get());
+          String title= archivo.getTitulo();
+        Optional<Libro> existe=biblioteca.stream()
+                  .filter(e -> e.getTitulo().contains(title))
+                .findFirst();
+              if(existe.isPresent()) {
+                  System.out.println("Este libro ya existe en su biblioteca");
+          return;}
+          else{
          biblioteca.add(archivo);
-       System.out.println(archivo);
+       System.out.println(archivo);}
    } else {
         System.out.println("""
                ╔===============================================╗
@@ -106,49 +142,44 @@ biblioteca.forEach(e -> System.out.println(e));
                ╚===============================================╝
                 """;
         System.out.println(aux);
-biblioteca.forEach(e -> System.out.println("Nombre:   "+e.getAutoria().getNombre()));
+biblioteca.forEach(e -> System.out.println("Nombre:   "+e.getAutoria().getNombre() + "  Titulo:  "+ e.getTitulo()));
     }
-//    private void obtenerListaAutoresPorFecha() {
-//        System.out.print("Ingrese la fecha en la que desea buscar");
-//      Integer aux= teclado.nextInt();
-//      if(aux>0 && aux< LocalDate.now().getYear();){
-//          biblioteca.stream()
-//                  .filter(e -> e.getAutoria() s)
-//
-//        }
+    private void obtenerListaAutoresPorFecha() {
+        System.out.print("Ingrese la fecha en la que desea buscar (año): ");
+        Integer aux = teclado.nextInt();
+        if (aux > 0 && aux <= LocalDate.now().getYear()) {
+            List<Libro> existen = biblioteca.stream()
+                    .filter(e -> e.getAutoria().getFechaDeNacimiento() <= aux && e.getAutoria().getFechaDeDefuncion()>=aux)
+                    .collect(Collectors.toList());
+            if (existen.isEmpty()) {
+                System.out.println("No se encuentran Autores vivos en dicha fecha");
+                return;
+            }
+            String txt = """
+                    ╔===============================================╗
+                    ║................Autores vivos..................║
+                    ╚===============================================╝""";
+
+            System.out.println(txt);
+            existen.forEach(e -> System.out.println(e.getAutoria().getNombre()));
+        } else {
+            System.out.println("Ingrese una fecha que sea valida");
+        }
+
+    }
 
 
 
-
-
-
-   //Textos ASCii
+//-------------Extras visuales------------------------------------------------
 public static   String  Salida() {
   String mensaje="""
-             #####                                                                                                 \s
-            #     #  ####  #       ####  #####  # #    #     ####   ####  #       ####  #####    ##   #####   #### \s
-            #       #    # #      #    # #    # # ##   #    #    # #    # #      #    # #    #  #  #  #    # #    #\s
-            #       #    # #      #    # #    # # # #  #    #      #    # #      #    # #    # #    # #    # #    #\s
-            #       #    # #      #    # #####  # #  # #    #      #    # #      #    # #####  ###### #    # #    #\s
-            #     # #    # #      #    # #   #  # #   ##    #    # #    # #      #    # #   #  #    # #    # #    #\s
-             #####   ####  ######  ####  #    # # #    #     ####   ####  ######  ####  #    # #    # #####   #### \s
-                                                                                                                   \s
-            #######                                                                   \s
-            #        ####  ##### ######     ####  #    # ###### #    # #####  ####    \s
-            #       #        #   #         #    # #    # #      ##   #   #   #    #   \s
-            #####    ####    #   #####     #      #    # #####  # #  #   #   #    #   \s
-            #            #   #   #         #      #    # #      #  # #   #   #    #   \s
-            #       #    #   #   #         #    # #    # #      #   ##   #   #    #   \s
-            #######  ####    #   ######     ####   ####  ###### #    #   #    ####    \s
-                                                                                      \s
-             #####                                                                                                 \s
-            #     # ######    #    #   ##      ##### ###### #####  #    # # #    #   ##   #####   ####             \s
-            #       #         #    #  #  #       #   #      #    # ##  ## # ##   #  #  #  #    # #    #            \s
-             #####  #####     ###### #    #      #   #####  #    # # ## # # # #  # #    # #    # #    #            \s
-                  # #         #    # ######      #   #      #####  #    # # #  # # ###### #    # #    # ### ### ###\s
-            #     # #         #    # #    #      #   #      #   #  #    # # #   ## #    # #    # #    # ### ### ###\s
-             #####  ######    #    # #    #      #   ###### #    # #    # # #    # #    # #####   ####  ### ### ###\s
-                                                                                                                    \s""";
+          
+          
+          █▀▀ █▀█ █░░ █▀█ █▀█ █ █▄░█   █▀▀ █▀█ █░░ █▀█ █▀█ ▄▀█ █▀▄ █▀█   █▀▀ █▀ ▀█▀ █▀▀   █▀▀ █░█ █▀▀ █▄░█ ▀█▀ █▀█   █▀ █▀▀
+          █▄▄ █▄█ █▄▄ █▄█ █▀▄ █ █░▀█   █▄▄ █▄█ █▄▄ █▄█ █▀▄ █▀█ █▄▀ █▄█   ██▄ ▄█ ░█░ ██▄   █▄▄ █▄█ ██▄ █░▀█ ░█░ █▄█   ▄█ ██▄
+          
+          █░█ ▄▀█   ▀█▀ █▀▀ █▀█ █▀▄▀█ █ █▄░█ ▄▀█ █▀▄ █▀█   ░ ░ ░
+          █▀█ █▀█   ░█░ ██▄ █▀▄ █░▀░█ █ █░▀█ █▀█ █▄▀ █▄█   ▄ ▄ ▄""";
   return mensaje;
 }
 public static String inicio(){
@@ -186,4 +217,5 @@ public static String inicio(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
+
 }
