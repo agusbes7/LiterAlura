@@ -120,20 +120,20 @@ private  void   filtrarxTitulo() {
                 libro.setAutoria(autor.get());}
          libroRepository.save(libro);
 //----------------Si existe seteamos el mismo autor en el nuevo libro y guardamos-------------------------------------------------------
-    System.out.println("Libro agregado exitosamente: " + libro);
+    System.out.println("Libro agregado exitosamente: "+'\n' + libro);
 return;    }
         System.out.println("""
                ╔===============================================╗
                ║¡¡ Lo sentimos no se pudo encontrar el libro!! ║
                ║  Asegurese de que este bien escrito...        ║
                ║  Puede tener otros nombres a veces !!!        ║
-               ╚===============================================╝\n""");
+               ╚===============================================╝""");
     }
     //......................................................
 
     private void obtenerListaConsultas() {
      biblioteca=libroRepository.findAll();
-biblioteca.forEach(e -> System.out.println(e));}
+biblioteca.forEach(System.out::println);}
     //......................................................
 
     private void obtenerListaAutores() {
@@ -141,7 +141,7 @@ biblioteca.forEach(e -> System.out.println(e));}
                ╔===============================================╗
                ║.....................Autores...................║
                ╚===============================================╝
-                """;
+               """;
         System.out.println(aux);
 escritores=autorRepository.findAll();
         escritores.forEach(e -> System.out.println(e.getNombre()));}
@@ -156,15 +156,16 @@ escritores=autorRepository.findAll();
                     ╚===============================================╝""";
 
             System.out.println(txt);
-            Optional<List<Autor>> autores= autorRepository.findByFechaDeNacimientoLessThanAndFechaDeDefuncionIsnullorFechaDeDefuncionGreatherThan(aux);
-            if (autores.isPresent()){
-                autores.get().forEach(e -> System.out.println(e.getNombre()));}
-            else {
-                System.out.println("No se encontraron autores vivos en esa fecha");}
-        }         else {
-            System.out.println("Ingrese una fecha que sea valida");}
-        return;   }
-    //......................................................
+//            Optional<List<Autor>> autores = autorRepository.findByFechaDeNacimientoLessThanAndFechaDeDefuncionIsnullorFechaDeDefuncionGreatherThan(aux);
+//            if (autores.isPresent()) {
+//                autores.get().forEach(e -> System.out.println(e.getNombre()));
+//            } else {
+//                System.out.println("No se encontraron autores vivos en esa fecha");
+//            }
+        } else {
+            System.out.println("Ingrese una fecha que sea valida");
+        }}
+//......................................................
 
     private void obtenerLibrosxIdioma() {
         System.out.print("""
@@ -199,15 +200,12 @@ else {
 //-------------Extras visuales------------------------------------------------
 public static   String  Salida() {
   String mensaje="""
-          
-          
           █▀▀ █▀█ █░░ █▀█ █▀█ █ █▄░█   █▀▀ █▀█ █░░ █▀█ █▀█ ▄▀█ █▀▄ █▀█   █▀▀ █▀ ▀█▀ █▀▀   █▀▀ █░█ █▀▀ █▄░█ ▀█▀ █▀█   █▀ █▀▀
           █▄▄ █▄█ █▄▄ █▄█ █▀▄ █ █░▀█   █▄▄ █▄█ █▄▄ █▄█ █▀▄ █▀█ █▄▀ █▄█   ██▄ ▄█ ░█░ ██▄   █▄▄ █▄█ ██▄ █░▀█ ░█░ █▄█   ▄█ ██▄
           
           █░█ ▄▀█   ▀█▀ █▀▀ █▀█ █▀▄▀█ █ █▄░█ ▄▀█ █▀▄ █▀█   ░ ░ ░
           █▀█ █▀█   ░█░ ██▄ █▀▄ █░▀░█ █ █░▀█ █▀█ █▄▀ █▄█   ▄ ▄ ▄""";
-  return mensaje;
-}
+  return mensaje;}
 public static String inicio(){
     String mensaje= """
 ██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████

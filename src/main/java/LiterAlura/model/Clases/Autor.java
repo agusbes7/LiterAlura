@@ -12,7 +12,7 @@ public class Autor {
     private Long id;
     String nombre;
     Integer FechaDeNacimiento, FechaDeDefuncion;
-
+public  Autor(){}
     public  Autor(DatosAutor autor){
        this.nombre=autor.nombre();
        this.FechaDeDefuncion=autor.Defuncion();

@@ -18,10 +18,10 @@ public class Libro {
    Autor autoria;
     @Enumerated(EnumType.STRING)
     Idioma lenguaje;
-
     Integer Descargas;
 
 //---------------------------------------------
+    public  Libro(){}
     public  Libro(DatosLibro libro){
         this.titulo=libro.titulo();
        // this.id=libro.id();

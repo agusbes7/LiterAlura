@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface AutorRepository extends JpaRepository<Autor, Long> {
     Optional<Autor> findByNombre(String nombre);
-    Optional<List<Autor>> findByFechaDeNacimientoLessThanAndFechaDeDefuncionIsnullorFechaDeDefuncionGreatherThan(Integer anio);
+  //  Optional<List<Autor>> findByFechaDeNacimientoLessThanAndFechaDeDefuncionIsnullorFechaDeDefuncionGreatherThan(Integer anio);
 }
