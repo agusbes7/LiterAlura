@@ -124,9 +124,9 @@ private  void   filtrarxTitulo() {
 return;    }
         System.out.println("""
                ╔===============================================╗
-               ║¡¡ Lo sentimos no se pudo encontrar el libro!! ║
-               ║  Asegurese de que este bien escrito...        ║
-               ║  Puede tener otros nombres a veces !!!        ║
+               ║¡¡ Lo sentimos no se encontró el libro!!       ║
+               ║  Asegurese de que esté bien escrito...        ║
+               ║  Puede tener otros nombres a veces o acentos! ║
                ╚===============================================╝""");
     }
     //......................................................
@@ -149,20 +149,21 @@ escritores=autorRepository.findAll();
     private void obtenerListaAutoresPorFecha() {
         System.out.print("Ingrese la fecha en la que desea buscar (año): ");
         Integer aux = teclado.nextInt();
-        if (aux > 0 && aux <= LocalDate.now().getYear()) {
+        if (aux <= LocalDate.now().getYear()) {
             String txt = """
                     ╔===============================================╗
                     ║................Autores vivos..................║
                     ╚===============================================╝""";
 
-            System.out.println(txt);
-//            Optional<List<Autor>> autores = autorRepository.findByFechaDeNacimientoLessThanAndFechaDeDefuncionIsnullorFechaDeDefuncionGreatherThan(aux);
-//            if (autores.isPresent()) {
-//                autores.get().forEach(e -> System.out.println(e.getNombre()));
-//            } else {
-//                System.out.println("No se encontraron autores vivos en esa fecha");
-//            }
-        } else {
+            Optional<List<Autor>> autores = autorRepository.AutoresVivos(aux);
+            if (autores.isPresent()) {
+                System.out.println(txt);
+                autores.get().forEach(System.out::println);
+            } else {
+                System.out.println("No se encontraron autores vivos en esa fecha");
+            }
+        }
+ else {
             System.out.println("Ingrese una fecha que sea valida");
         }}
 //......................................................

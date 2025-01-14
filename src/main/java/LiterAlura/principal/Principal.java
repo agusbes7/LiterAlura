@@ -147,7 +147,7 @@
 //    private void obtenerListaAutoresPorFecha() {
 //        System.out.print("Ingrese la fecha en la que desea buscar (año): ");
 //        Integer aux = teclado.nextInt();
-//        if (aux > 0 && aux <= LocalDate.now().getYear()) {
+//        if (aux <= LocalDate.now().getYear()) {
 //            List<Libro> existen = biblioteca.stream()
 //                    .filter(e -> e.getAutoria().getFechaDeNacimiento() <= aux && e.getAutoria().getFechaDeDefuncion()>=aux)
 //                    .collect(Collectors.toList());
