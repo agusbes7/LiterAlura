@@ -56,7 +56,8 @@ Ya podemos elegir las opciones que queremos, contamos con una serie de libros ya
 
 > Antes de implementar la base de datos por cada libro se creaba un autor aunque sea el mismo, eso se corrigio cuando empezamos a mapear las entidades en la base de datos y reemplazamos los metodos de consola por los de la base
 > Cada autor es instanciado 1 vez y si se quiere agregar un libro del autor simplemente se setea con el autor que ya existe en nuestra base de datos  
-![banner libros.webp](Medias%2Fbanner%20libros.webp)
+![banner libros.webp](Medias%2Fbanner%20libros.webp)  
+
 📕📗📘📙📕📗📘📙
 ## Dado que ya tenemos varios Objetos en la base observaremos el funcionamiento de los servicios de la aplicacion  
 
